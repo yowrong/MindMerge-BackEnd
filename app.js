@@ -20,7 +20,7 @@ app.get("/", (req, res) => {
 // );
 
 socketio.on("connection", (userSocket) => {
-    userSocket.emit("welcome", "Hi");
+    userSocket.emit("welcome", {message: "Donna is the best <3"});
     userSocket.on("send_message", (data) => {
         userSocket.broadcast.emit("receive_message", data);
     });
