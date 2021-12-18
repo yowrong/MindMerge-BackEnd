@@ -53,6 +53,64 @@ class Player{
     }
 }
 
+var playerCount = 4;
+var lives;
+var throwingStar;
+
+void function initializeGame() {
+    switch (playerCount) {
+        case 2:
+            lives = 2;
+            throwingStar = 1;
+            break;
+        case 3:
+            lives = 3;
+            throwingStar = 1;
+            break;
+        default:
+            lives = 4;
+            throwingStar = 1;
+    }
+}
+
+const roundNumber = 1;
+const player1 = new Set();
+const player1Star = new Set();
+
+const player2 = new Set();
+const player2Star = new Set();
+
+const player3 = new Set();
+const player3Star = new Set();
+
+const player4 = new Set();
+const player4Star = new Set();
+
+// beginning of round
+void function initializeHand() {
+    for (int i = 0; i < roundNumber; i++) {
+        player1.add(Math.random(100));
+        player2.add(Math.random(100));
+        player3.add(Math.random(100));
+        player4.add(Math.random(100));
+    }
+}
+
+// end of round
+void function clearHand() {
+    player1.clear;
+    player2.clear;
+    player3.clear;
+    player4.clear;
+}
+
+void function clearThrowingStars() {
+    player1Star.clear;
+    player2Star.clear;
+    player3Star.clear;
+    player4Star.clear;
+}
+
 
 
 app.get("/", (req, res) => {
