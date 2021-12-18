@@ -1,0 +1,27 @@
+{
+  "dependencies": {
+    "express": "^4.17.2",
+    "http": "^0.0.1-security",
+    "nodemon": "^2.0.15",
+    "socket.io": "^4.4.0",
+    "ws": "^8.3.0"
+  },
+  "name": "mindmerge-backend",
+  "description": "ReadMe",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yowrong/MindMerge-BackEnd.git"
+  },
+  "author": "Team 37K",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yowrong/MindMerge-BackEnd/issues"
+  },
+  "homepage": "https://github.com/yowrong/MindMerge-BackEnd#readme"
+}
