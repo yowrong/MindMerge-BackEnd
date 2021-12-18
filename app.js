@@ -10,20 +10,26 @@ const msg = "Welcome to Mind Merge!";
 // let enterNameButton = // name button
 
 /* Game */
-const numOfPlayers = 4;
+var numOfPlayers = 4;
 var level = 1;
-const MAX_LEVEL = 8;
-
+var MAX_LEVEL = 8;
+var lives;
+var throwingStar;
+var roundNumber = 1;
 
 /* Cards */
 const random = Math.floor(Math.random() * 100) + 1;
-const cardValue;
+var cardValue;
 
 var cards = [];
-for (let i = 0; i < 101; i++) {
-    cards.push(i);
+
+function generateCards() {
+    for (let i = 0; i < 101; i++) {
+        cards.push(i);
+    }
+    return cards;   
 }
-return cards;
+
 
 function dealCards() {
 
@@ -45,7 +51,8 @@ class Player{
     }
 
     sortCards() {
-        this.playerCards.sort.reverse();
+        this.playerCards.sort;
+        this.playerCards.reverse();
     }
 
     playCard() {
@@ -53,12 +60,8 @@ class Player{
     }
 }
 
-var playerCount = 4;
-var lives;
-var throwingStar;
-
 void function initializeGame() {
-    switch (playerCount) {
+    switch (numOfPlayers) {
         case 2:
             lives = 2;
             throwingStar = 1;
@@ -73,7 +76,6 @@ void function initializeGame() {
     }
 }
 
-const roundNumber = 1;
 const player1 = new Set();
 const player1Star = new Set();
 
@@ -88,11 +90,11 @@ const player4Star = new Set();
 
 // beginning of round
 void function initializeHand() {
-    for (int i = 0; i < roundNumber; i++) {
-        player1.add(Math.random(100));
-        player2.add(Math.random(100));
-        player3.add(Math.random(100));
-        player4.add(Math.random(100));
+    for (let i = 0; i < roundNumber; i++) {
+        player1.add(Math.random() * 100);
+        player2.add(Math.random() * 100);
+        player3.add(Math.random() * 100);
+        player4.add(Math.random() * 100);
     }
 }
 
