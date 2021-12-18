@@ -20,34 +20,14 @@ var roundNumber = 1;
 /* Cards */
 const random = Math.floor(Math.random() * 100) + 1;
 var cardValue;
-
 var cards = [];
-
-function generateCards() {
-    for (let i = 0; i < 101; i++) {
-        cards.push(i);
-    }
-    return cards;   
-}
-
-
-function dealCards() {
-
-}
+var players = [numOfPlayers];
 
 /* Player */
-class Player{
+class Player {
     constructor(name) {
         this.playerCards = [];
         this.name = name;
-    }
-
-    dealCards(level) {
-        for (let i = 0; i <= level; i++) {
-            let randomCard = random;
-            this.playerCards.push(randomCard);
-            cards.splice(randomCard, 1);
-        }
     }
 
     sortCards() {
@@ -57,6 +37,23 @@ class Player{
 
     playCard() {
         this.playerCards.pop();
+    }
+}
+
+function generateCards() {
+    for (let i = 0; i < 101; i++) {
+        cards.push(i);
+    }
+    return cards;   
+}
+
+function dealCards(level, players) {
+    for (var i = 0; i < players.length; i++) {
+        for (let i = 0; i <= level; i++) {
+            let randomCard = random;
+            this.playerCards.push(randomCard);
+            cards.splice(randomCard, 1);
+        }
     }
 }
 
@@ -112,8 +109,6 @@ void function clearThrowingStars() {
     player3Star.clear;
     player4Star.clear;
 }
-
-
 
 app.get("/", (req, res) => {
     res.send(msg);
