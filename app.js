@@ -20,10 +20,10 @@ app.get("/", (req, res) => {
 // );
 
 socketio.on("connection", (userSocket) => {
+    userSocket.emit("welcome", "Hi");
     userSocket.on("send_message", (data) => {
         userSocket.broadcast.emit("receive_message", data);
-    })
-    // userSocket.on("receive_message", "Successfully connected to server!");
+    });
 })
 
 http.listen(port);
