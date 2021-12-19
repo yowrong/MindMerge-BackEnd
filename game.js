@@ -40,13 +40,13 @@ class Player {
     }
 
     playCard() {
-        return this.playerCards.shift();
+        evaluateOrder(this.playerCards.shift());
     }
 }
 
 class Game {
     // beginning of game
-    players  = [numOfPlayers];
+    players = [numOfPlayers];
     createPlayers() {
         for (var i = 0; i < numOfPlayers; i++) {
             players[i] = new Player();
@@ -129,6 +129,18 @@ class Game {
         playedCards.push(cardValue);
     }
 
+    activateThrowingStar(playersArray) {
+        if (throwingStar == 0) {
+            return;
+        }
+        throwingStar--;
+        for (var i = 0; i < playersArray.length; i++) {
+            var currentPlayer = playersArray[i];
+            var lowestCard = currentPlayer.playerCards.shift();
+            currentPlayer.throwingStarCards.push(lowestCard);
+        }
+    }
+
     // end of round
     endOfRound() {
         if (!dealtCards.isEmpty()) {
@@ -152,32 +164,28 @@ class Game {
 
     nextLevel() {
         if (level < MAX_LEVEL) {
+            this.clearAllHands();
+            this.clearAllThrowingStars();
             level = level + 1;
 
             if (level == 2 && throwingStar < MAX_THROWING_STARS) {
                 throwingStar++;
             }
-    
             if (level == 3 && lives < MAX_LIVES) {
                 lives++;
             }
-    
             if (level == 5 && throwingStar < MAX_THROWING_STARS) {
                 throwingStar++;
             }
-    
             if (level == 6 && lives < MAX_LIVES) {
                 lives++;
             }
-    
             if (level == 8 && throwingStar < MAX_THROWING_STARS) {
                 throwingStar++;
             }
-
             if (level == 9 && lives < MAX_LIVES) {
                 lives++;
             }
-
         }
     }
 
