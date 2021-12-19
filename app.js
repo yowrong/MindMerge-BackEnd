@@ -253,7 +253,7 @@ socketio.on("connection", (userSocket) => {
         game.evaluateOrder(data);
         const otherUsers = users.filter((user) => userSocket.id !== user.id);
         const self = users.filter((user) => userSocket.id === user.id);
-        userSocket.emit("playCard", {players: otherUsers, self: self, lives: game.lives, stars: game.throwingStar, level: game.level, playedCards: game.playedCards});
+        userSocket.emit("playCard", {players: otherUsers, self: self, lives: game.lives, stars: game.throwingStar, level: level, playedCards: game.playedCards});
     })
     
     // var socket = socketio.connect('http://localhost');
