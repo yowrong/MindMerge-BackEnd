@@ -14,10 +14,8 @@ var level = 1;
 var MAX_LEVEL = 8;
 var lives;
 var throwingStar;
-var roundNumber = 1;
 var playedCards = [];
 var dealtCards = [];
-
 
 /* Cards */
 const random;
@@ -52,28 +50,19 @@ class Player {
 }
 
 class Game {
-    createPlayers(players) {
+
+    // beginning of game
+    createPlayers() {
         for (var i = 0; i < numOfPlayers; i++) {
             players[i] = new Player();
         }
     }
 
-    // beginning of round
-    dealCards(level, players) {
-        for (var i = 0; i < players.length; i++) {
-            for (let j = 0; j < level; j++) {
-                random = Math.floor(Math.random() * 100) + 1;
-                while (!cards.has(random)) {
-                    random = Math.floor(Math.random() * 100) + 1;
-                }
-
-                players[i].playerCards.push(random);
-                dealtCards.push(random);
-                cards.delete(random);
-            }
+    generateCards() {
+        for (let i = 1; i < 101; i++) {
+            cards.add(i);
         }
-        dealtCards.sort;
-        dealtCards.reverse();
+        return cards;
     }
 
     initializeGame() {
@@ -92,13 +81,35 @@ class Game {
         }
     }
 
-    generateCards() {
-        for (let i = 1; i < 101; i++) {
-            cards.add(i);
+    // beginning of round
+    dealCards() {
+        for (var i = 0; i < players.length; i++) {
+            for (let j = 0; j < level; j++) {
+                random = Math.floor(Math.random() * 100) + 1;
+                while (!cards.includes(random)) {
+                    random = Math.floor(Math.random() * 100) + 1;
+                }
+
+                players[i].playerCards.push(random);
+                dealtCards.push(random);
+                cards.splice(random, 1);
+            }
         }
-        return cards;
+        dealtCards.sort;
+        dealtCards.reverse();
     }
 
+    // during round
+    loseLives() {
+        if (lives > 0) {
+            lives--;
+        }
+        if (lives == 0) {
+            endGame();
+        }
+    }
+
+    // end of round
     endOfRound() {
         while (!dealtCards.isEmpty()) {
             return false;
@@ -106,32 +117,22 @@ class Game {
         return true; 
     }
 
-    nextLevel() {
-        if (endOfRound && level < MAX_LEVEL) {
-            level++;
-        }
-    }
-
-    // end of round
-    clearAllHands(players) {
+    clearAllHands() {
         for (var i = 0; i < players.length; i++) {
             players[i].playerCards = {};
         }
 
     }
 
-    clearAllThrowingStars(players) {
+    clearAllThrowingStars() {
         for (var i = 0; i < players.length; i++) {
             players[i].throwingStarCards.clear();
         }
     }
 
-    loseLives() {
-        if (lives > 0) {
-            lives--;
-        }
-        if (lives == 0) {
-            endGame();
+    nextLevel() {
+        if (endOfRound && level < MAX_LEVEL) {
+            level++;
         }
     }
 
