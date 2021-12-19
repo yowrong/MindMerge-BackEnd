@@ -28,10 +28,8 @@ socketio.on("connection", (userSocket) => {
         userSocket.emit("initRoom", {roomCode: "ABCD", players: users});
     });
     userSocket.on("joinRoom", (data) => {
-        if (data.roomCode.toUpperCase() === "ABCD") {
-            userJoin(userSocket.id, data);
-            userSocket.emit("confirmRoom", {roomCode: "ABCD", players: users});
-        }
+        userJoin(userSocket.id, data);
+        userSocket.emit("confirmRoom", {roomCode: "ABCD", players: users});
     })
 })
 
