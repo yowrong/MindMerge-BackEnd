@@ -55,7 +55,7 @@ class Game {
     // beginning of round
     dealCards(level, players) {
         for (var i = 0; i < players.length; i++) {
-            for (let j = 0; j <= level; j++) {
+            for (let j = 0; j < level; j++) {
                 let randomCard = random;
 
                 while (cards.has(randomCard)) {
@@ -85,7 +85,7 @@ class Game {
     }
 
     generateCards() {
-        for (let i = 0; i < 101; i++) {
+        for (let i = 1; i < 101; i++) {
             cards.add(i);
         }
         return cards;
