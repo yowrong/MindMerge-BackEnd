@@ -241,13 +241,14 @@ socketio.on("connection", (userSocket) => {
     userSocket.on("createOtherPlayers", () => {
         const otherUsers = users.filter((user) => userSocket.id !== user.id);
         userSocket.emit("createOtherPlayers", {players: otherUsers});
-        createPlayers();
-        generateCards();
-        initializeGame();
-        dealCards();
+        let game = new Game();
+        game.createPlayers();
+        game.generateCards();
+        game.initializeGame();
+        game.dealCards();
     });
     userSocket.on("playCard", (data) => {
-        evaluateOrder(data);
+        game.evaluateOrder(data);
     })
     
     // var socket = socketio.connect('http://localhost');
