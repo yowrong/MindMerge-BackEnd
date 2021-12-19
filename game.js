@@ -55,10 +55,10 @@ class Game {
     // beginning of round
     dealCards(level, players) {
         for (var i = 0; i < players.length; i++) {
-            for (let j = 0; j <= level; j++) {
+            for (let j = 0; j < level; j++) {
                 let randomCard = random;
 
-                while (cards.has(randomCard)) {
+                while (!cards.has(randomCard)) {
                     randomCard = Math.floor(Math.random() * 100) + 1;
                 }
 
@@ -123,4 +123,8 @@ socketio.on("connection", (userSocket) => {
         userSocket.on("receive_message", "Successfully connected to server!");
 })
 
-http.listen(port);
+http.listen(port, function () {
+    console.log('Listening on port ' + port + '!');
+});
+
+
