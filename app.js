@@ -48,6 +48,9 @@ socketio.on("connection", (userSocket) => {
     userSocket.on("createOtherPlayers", () => {
         const otherUsers = users.filter((user) => userSocket.id !== user.id);
         userSocket.emit("createOtherPlayers", {players: otherUsers});
+    });
+    userSocket.on("playCard", () => {
+
     })
 
     socketio.emit('disconnect', { user: userSocket.userName, numOfUsers: numOfPlayers });
