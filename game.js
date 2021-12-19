@@ -1,5 +1,4 @@
 const { listeners } = require("process");
-
 const port = process.env.PORT || 3000;
 const app = require("express")();
 const http = require("http").createServer(app);
@@ -10,27 +9,27 @@ const msg = "Welcome to Mind Merge!";
 // let enterNameButton = // name button
 
 /* Game */
-var numOfPlayers = 4;
+var numOfPlayers = 0;
 var level = 1;
 var MAX_LEVEL = 8;
 var lives;
 var throwingStar;
-var roundNumber = 1;
-
-class Game {
-
-}
+var playedCards = [];
+var dealtCards = [];
 
 /* Cards */
-const random = Math.floor(Math.random() * 100) + 1;
+const random;
 var cardValue;
-var cards = [];
+var cards = new Set();
 var players = [numOfPlayers];
 
 /* Player */
+
 class Player {
+    
     constructor(name) {
         this.playerCards = [];
+        this.throwingStarCards = new Set();
         this.name = name;
     }
 
@@ -40,78 +39,107 @@ class Player {
     }
 
     playCard() {
-        this.playerCards.pop();
-    }
-}
-
-function generateCards() {
-    for (let i = 0; i < 101; i++) {
-        cards.push(i);
-    }
-    return cards;   
-}
-
-function dealCards(level, players) {
-    for (var i = 0; i < players.length; i++) {
-        for (let i = 0; i <= level; i++) {
-            let randomCard = random;
-            this.playerCards.push(randomCard);
-            cards.splice(randomCard, 1);
+        cardValue = this.playerCards.pop();
+        if (cardValue != dealtCards[0]) {
+            loseLives();
+        } else {
+            playedCards.push(cardValue);
+            dealtCards.shift();
         }
     }
 }
 
-void function initializeGame() {
-    switch (numOfPlayers) {
-        case 2:
-            lives = 2;
-            throwingStar = 1;
-            break;
-        case 3:
-            lives = 3;
-            throwingStar = 1;
-            break;
-        default:
-            lives = 4;
-            throwingStar = 1;
+class Game {
+
+    // beginning of game
+    createPlayers() {
+        for (var i = 0; i < numOfPlayers; i++) {
+            players[i] = new Player();
+        }
     }
-}
 
-const player1 = new Set();
-const player1Star = new Set();
-
-const player2 = new Set();
-const player2Star = new Set();
-
-const player3 = new Set();
-const player3Star = new Set();
-
-const player4 = new Set();
-const player4Star = new Set();
-
-// beginning of round
-void function initializeHand() {
-    for (let i = 0; i < roundNumber; i++) {
-        player1.add(Math.random() * 100);
-        player2.add(Math.random() * 100);
-        player3.add(Math.random() * 100);
-        player4.add(Math.random() * 100);
+    generateCards() {
+        for (let i = 1; i < 101; i++) {
+            cards.add(i);
+        }
+        return cards;
     }
-}
 
-// end of round
-void function clearHand() {
-    player1.clear;
-    player2.clear;
-    player3.clear;
-    player4.clear;
-}
+    initializeGame() {
+        switch (numOfPlayers) {
+            case 2:
+                lives = 2;
+                throwingStar = 1;
+                break;
+            case 3:
+                lives = 3;
+                throwingStar = 1;
+                break;
+            default:
+                lives = 4;
+                throwingStar = 1;
+        }
+    }
 
-void function clearThrowingStars() {
-    player1Star.clear;
-    player2Star.clear;
-    player3Star.clear;
-    player4Star.clear;
+    // beginning of round
+    dealCards() {
+        for (var i = 0; i < players.length; i++) {
+            for (let j = 0; j < level; j++) {
+                random = Math.floor(Math.random() * 100) + 1;
+                while (!cards.includes(random)) {
+                    random = Math.floor(Math.random() * 100) + 1;
+                }
+
+                players[i].playerCards.push(random);
+                dealtCards.push(random);
+                cards.splice(random, 1);
+            }
+        }
+        dealtCards.sort;
+        dealtCards.reverse();
+    }
+
+    // during round
+    loseLives() {
+        if (lives > 0) {
+            lives--;
+        }
+        if (lives == 0) {
+            endGame();
+        }
+    }
+
+    // end of round
+    endOfRound() {
+        while (!dealtCards.isEmpty()) {
+            return false;
+        }
+        return true; 
+    }
+
+    clearAllHands() {
+        for (var i = 0; i < players.length; i++) {
+            players[i].playerCards = {};
+        }
+
+    }
+
+    clearAllThrowingStars() {
+        for (var i = 0; i < players.length; i++) {
+            players[i].throwingStarCards.clear();
+        }
+    }
+
+    nextLevel() {
+        if (endOfRound && level < MAX_LEVEL) {
+            level++;
+        }
+    }
+
+    endGame() {
+        // return to lobby
+    }
+
 }
 
 app.get("/", (req, res) => {
@@ -119,16 +147,32 @@ app.get("/", (req, res) => {
 })
 
 // const server = new WebSocket.Server(
-//     {
-//       port: port,
-//     }
+//     {port: port,}
 // );
 
-socketio.on("connection", (userSocket) => {
+socketio.on("connect", function(userSocket) {
+    numOfPlayers++;
+    let name = "player" + numOfPlayers;
+    userSocket.user = name;
+    socketio.emit('New_Player_Added', { user: socketio.userName, numOfUsers: numOfPlayers });
+    console.log('Number of players:', numOfPlayers);
+
+
+    userSocket.on('disconnect', function(data) {
+        numOfPlayers--;
+        socketio.emit('Player_Left', { user: userSocket.userName, numOfUsers: numOfPlayers });
+        console.log('Connected Players:', numOfPlayers);
+    });
+
+
     userSocket.on("send_message", (data) => {
         userSocket.broadcast.emit("receive_message", data);
     }),
         userSocket.on("receive_message", "Successfully connected to server!");
 })
 
-http.listen(port);
+http.listen(port, function () {
+    console.log('Listening on port ' + port + '!');
+});
+
+
