@@ -5,6 +5,18 @@ const socketio = require("socket.io")(http);
 const msg = "Welcome to Mind Merge!";
 // import game from './game.js';
 
+let users = [];
+
+const userJoin = (id, username) => {
+    const user = { id, username };
+    users.push(user);
+    return user;
+}
+
+const userReset = () => {
+    users = [];
+}
+
 /* Game */
 const MAX_LIVES = 5;
 const MAX_THROWING_STARS = 3;
@@ -200,18 +212,6 @@ class Game {
 app.get("/", (req, res) => {
     res.send(msg);
 })
-
-let users = [];
-
-const userJoin = (id, username) => {
-    const user = { id, username };
-    users.push(user);
-    return user;
-}
-
-const userReset = () => {
-    users = [];
-}
 
 setInterval(userReset, 300000);
 
