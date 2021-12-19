@@ -34,17 +34,6 @@ var random;
 var cards = new Set();
 var players;
 
-
-const userJoin = (id, username) => {
-    const user = { id, username };
-    users.push(user);
-    return user;
-}
-
-const userReset = () => {
-    users = [];
-}
-
 /* Player */
 class Player {
 
