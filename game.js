@@ -9,6 +9,8 @@ const msg = "Welcome to Mind Merge!";
 // let enterNameButton = // name button
 
 /* Game */
+const MAX_LIVES = 5;
+const MAX_THROWING_STARS = 3;
 var numOfPlayers = 0;
 var level = 1;
 var MAX_LEVEL = 8;
@@ -20,7 +22,7 @@ var dealtCards = [];
 /* Cards */
 var random;
 var cards = new Set();
-var players = [numOfPlayers];
+var players;
 
 /* Player */
 
@@ -38,13 +40,13 @@ class Player {
     }
 
     playCard() {
-        return this.playerCards.shift();
+        evaluateOrder(this.playerCards.shift());
     }
 }
 
 class Game {
-
     // beginning of game
+    players = [numOfPlayers];
     createPlayers() {
         for (var i = 0; i < numOfPlayers; i++) {
             players[i] = new Player();
@@ -109,6 +111,10 @@ class Game {
             playedCards.push(cardValue);
             dealtCards.shift();
         }
+
+        if (this.endOfRound()) {
+            this.nextLevel();
+        }
     }
 
     addAllCardsBelowCurrentCard(cardValue) {
@@ -123,9 +129,21 @@ class Game {
         playedCards.push(cardValue);
     }
 
+    activateThrowingStar(playersArray) {
+        if (throwingStar == 0) {
+            return;
+        }
+        throwingStar--;
+        for (var i = 0; i < playersArray.length; i++) {
+            var currentPlayer = playersArray[i];
+            var lowestCard = currentPlayer.playerCards.shift();
+            currentPlayer.throwingStarCards.push(lowestCard);
+        }
+    }
+
     // end of round
     endOfRound() {
-        while (!dealtCards.isEmpty()) {
+        if (!dealtCards.isEmpty()) {
             return false;
         }
         return true;
@@ -145,12 +163,37 @@ class Game {
     }
 
     nextLevel() {
-        if (endOfRound && level < MAX_LEVEL) {
-            level++;
+        if (level < MAX_LEVEL) {
+            this.clearAllHands();
+            this.clearAllThrowingStars();
+            level = level + 1;
+
+            if (level == 2 && throwingStar < MAX_THROWING_STARS) {
+                throwingStar++;
+            }
+            if (level == 3 && lives < MAX_LIVES) {
+                lives++;
+            }
+            if (level == 5 && throwingStar < MAX_THROWING_STARS) {
+                throwingStar++;
+            }
+            if (level == 6 && lives < MAX_LIVES) {
+                lives++;
+            }
+            if (level == 8 && throwingStar < MAX_THROWING_STARS) {
+                throwingStar++;
+            }
+            if (level == 9 && lives < MAX_LIVES) {
+                lives++;
+            }
         }
     }
 
     endGame() {
+        level = 1;
+        cards.clear();
+        playedCards.length = 0;
+        dealtCards.length = 0;
         // return to lobby
     }
 
@@ -164,25 +207,30 @@ app.get("/", (req, res) => {
 //     {port: port,}
 // );
 
-socketio.on('connect', function (userSocket) {
+socketio.on('connect', function (socket) {
     numOfPlayers++;
-    let name = "player" + numOfPlayers;
-    userSocket.user = name;
-    socketio.emit('New_Player_Added', { user: socketio.userName, numOfUsers: numOfPlayers });
+    let name = "player";
+    socket.userName = name;
+    socketio.emit('user_joined', { 
+        user: socketio.userName, 
+        numOfUsers: numOfPlayers 
+    });
     console.log('Number of players:', numOfPlayers);
 
-
-    userSocket.on('disconnect', function (data) {
+    socket.on('disconnect', function (data) {
         numOfPlayers--;
-        socketio.emit('Player_Left', { user: userSocket.userName, numOfUsers: numOfPlayers });
+        socketio.emit('Player_Left', { 
+            user: socket.userName, 
+            numOfUsers: numOfPlayers 
+        });
         console.log('Connected Players:', numOfPlayers);
     });
 
 
-    userSocket.on("send_message", (data) => {
-        userSocket.broadcast.emit("receive_message", data);
-    }),
-        userSocket.on("receive_message", "Successfully connected to server!");
+    // userSocket.on('send_message', (data) => {
+    //     userSocket.broadcast.emit('receive_message', data);
+    // }),
+    //     userSocket.on("receive_message", "Successfully connected to server!");
 })
 
 http.listen(port, function () {
