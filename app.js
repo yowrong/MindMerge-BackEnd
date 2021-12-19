@@ -87,8 +87,8 @@ class Game {
     evaluateOrder(cardValue) {
         if (cardValue != dealtCards[0]) {
             // put up fail message
-            loseLives();
-            addAllCardsBelowCurrentCard(cardValue);
+            this.loseLives();
+            this.addAllCardsBelowCurrentCard(cardValue);
         } else {
             playedCards.push(cardValue);
             dealtCards.shift();
