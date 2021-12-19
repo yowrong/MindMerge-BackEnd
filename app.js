@@ -33,8 +33,8 @@ socketio.on("connection", (userSocket) => {
         userSocket.broadcast.emit("receive_message", data);
     });
     userSocket.on("createRoom", (data) => {
-        userSocket.emit("initRoom", {roomCode: "ABCD"});
         const user = userJoin(userSocket.id, data);
+        userSocket.emit("initRoom", {roomCode: "ABCD", players: users});
     });
     userSocket.on("joinRoom", (data) => {
         if (data == "ABCD") {
