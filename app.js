@@ -253,15 +253,15 @@ socketio.on("connection", (userSocket) => {
     // var socket = socketio.connect('http://localhost');
     // socket.emit('game.js-event');
 
-    socketio.emit('disconnect', { user: userSocket.userName, numOfUsers: numOfPlayers });
-    userSocket.on('disconnect', function (data) {
-        numOfPlayers--;
-        socketio.emit('Player_Left', {
-            user: data.userName,
-            numOfUsers: data.numOfPlayers
-        });
-        console.log('Connected Players:', numOfPlayers);
-    });
+    // socketio.emit('disconnect', { user: userSocket.userName, numOfUsers: numOfPlayers });
+    // userSocket.on('disconnect', function (data) {
+    //     numOfPlayers--;
+    //     socketio.emit('Player_Left', {
+    //         user: data.userName,
+    //         numOfUsers: data.numOfPlayers
+    //     });
+    //     console.log('Connected Players:', numOfPlayers);
+    // });
     
 })
 
