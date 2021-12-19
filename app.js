@@ -184,7 +184,7 @@ class Game {
 let users = [];
 
 const userJoin = (id, username) => {
-    const user = { id, username, cards: [] };
+    const user = { id, username, cards: [], cardMeter: 0 };
     users.push(user);
     return user;
 }
@@ -197,7 +197,7 @@ const userReset = () => {
 const MAX_LIVES = 5;
 const MAX_THROWING_STARS = 3;
 var numOfPlayers = users.length;
-var level = 1;
+var level = 3;
 var MAX_LEVEL = 8;
 var lives = 0;
 var throwingStar = 0;
@@ -256,7 +256,14 @@ socketio.on("connection", (userSocket) => {
         const otherUsers = users.filter((user) => userSocket.id !== user.id);
         const self = users.filter((user) => userSocket.id === user.id);
         userSocket.emit("playCard", {players: otherUsers, self: self, lives: game.lives, stars: game.throwingStar, level: level, playedCards: game.playedCards});
-    })
+    });
+    userSocket.on("updatePlayerDrag", (data) => {
+        const index = users.map((e) => e.id).indexOf(userSocket.id);
+        users[index].cardMeter = data.cardMeter;
+        const otherUsers = users.filter((user) => userSocket.id !== user.id);
+        const self = users.filter((user) => userSocket.id === user.id);
+        userSocket.emit("updatePlayer", {players: otherUsers, self: self, lives: game.lives, stars: game.throwingStar, level: level, playedCards: game.playedCards});
+    });
     
     // var socket = socketio.connect('http://localhost');
     // socket.emit('game.js-event');
