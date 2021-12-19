@@ -20,7 +20,7 @@ var dealtCards = [];
 
 
 /* Cards */
-const random = Math.floor(Math.random() * 100) + 1;
+const random;
 var cardValue;
 var cards = new Set();
 var players = [numOfPlayers];
@@ -28,9 +28,10 @@ var players = [numOfPlayers];
 /* Player */
 
 class Player {
+    
     constructor(name) {
         this.playerCards = [];
-        this.throwingStarCards = [];
+        this.throwingStarCards = new Set();
         this.name = name;
     }
 
@@ -51,7 +52,6 @@ class Player {
 }
 
 class Game {
-
     createPlayers(players) {
         for (var i = 0; i < numOfPlayers; i++) {
             players[i] = new Player();
@@ -62,15 +62,14 @@ class Game {
     dealCards(level, players) {
         for (var i = 0; i < players.length; i++) {
             for (let j = 0; j < level; j++) {
-                let randomCard = random;
-
-                while (!cards.has(randomCard)) {
-                    randomCard = Math.floor(Math.random() * 100) + 1;
+                random = Math.floor(Math.random() * 100) + 1;
+                while (!cards.has(random)) {
+                    random = Math.floor(Math.random() * 100) + 1;
                 }
 
-                players[i].playerCards.push(randomCard);
-                dealtCards.push(randomCard);
-                cards.delete(randomCard);
+                players[i].playerCards.push(random);
+                dealtCards.push(random);
+                cards.delete(random);
             }
         }
         dealtCards.sort;
@@ -103,7 +102,7 @@ class Game {
     // end of round
     clearAllHands(players) {
         for (var i = 0; i < players.length; i++) {
-            players[i].playerCards.clear();
+            players[i].playerCards = {};
         }
 
     }
