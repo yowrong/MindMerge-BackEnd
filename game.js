@@ -25,7 +25,6 @@ var cards = new Set();
 var players;
 
 /* Player */
-
 class Player {
 
     constructor(name) {
@@ -105,6 +104,7 @@ class Game {
 
     evaluateOrder(cardValue) {
         if (cardValue != dealtCards[0]) {
+            // put up fail message
             loseLives();
             addAllCardsBelowCurrentCard(cardValue);
         } else {
@@ -211,30 +211,26 @@ socketio.on('connect', function (socket) {
     numOfPlayers++;
     let name = "player";
     socket.userName = name;
-    socketio.emit('user_joined', { 
-        user: socketio.userName, 
-        numOfUsers: numOfPlayers 
+    socketio.emit('user_joined', {
+        user: socketio.userName,
+        numOfUsers: numOfPlayers
     });
     console.log('Number of players:', numOfPlayers);
 
     socket.on('disconnect', function (data) {
         numOfPlayers--;
-        socketio.emit('Player_Left', { 
-            user: socket.userName, 
-            numOfUsers: numOfPlayers 
+        socketio.emit('Player_Left', {
+            user: socket.userName,
+            numOfUsers: numOfPlayers
         });
         console.log('Connected Players:', numOfPlayers);
     });
 
 
-    // userSocket.on('send_message', (data) => {
-    //     userSocket.broadcast.emit('receive_message', data);
-    // }),
-    //     userSocket.on("receive_message", "Successfully connected to server!");
+    socket.on('send_message', (data) => {
+        socket.broadcast.emit('receive_message', data);
+    }),
+        socket.on("receive_message", "Successfully connected to server!");
 })
-
-http.listen(port, function () {
-    console.log('Listening on port ' + port + '!');
-});
 
 
