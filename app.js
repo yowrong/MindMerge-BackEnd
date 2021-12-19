@@ -27,6 +27,12 @@ const userJoin = (id, username) => {
     return user;
 }
 
+const userReset = () => {
+    users = [];
+}
+
+setInterval(userReset, 300000);
+
 socketio.on("connection", (userSocket) => {
     userSocket.emit("welcome", {message: "Donna is the best <3"});
     userSocket.on("send_message", (data) => {
