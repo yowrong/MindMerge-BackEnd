@@ -44,6 +44,7 @@ class Game {
     // beginning of game
     players = [numOfPlayers];
     createPlayers() {
+        numOfPlayers = users.length;
         for (var i = 0; i < numOfPlayers; i++) {
             players[i] = new Player();
         }
@@ -216,15 +217,15 @@ setInterval(userReset, 300000);
 
 socketio.on("connection", (userSocket) => {
 
-    numOfPlayers++;
-    let name = "player";
-    userSocket.userName = name;
-    socketio.emit('user_joined', {
-        user: socketio.userName,
-        numOfUsers: numOfPlayers
-    });
+    // numOfPlayers++;
+    // let name = "player";
+    // userSocket.userName = name;
+    // socketio.emit('user_joined', {
+    //     user: socketio.userName,
+    //     numOfUsers: numOfPlayers
+    // });
 
-    console.log('Number of players:', numOfPlayers);
+    // console.log('Number of players:', numOfPlayers);
     userSocket.on("createRoom", (data) => {
         userJoin(userSocket.id, data);
         userSocket.emit("initRoom", {roomCode: "ABCD", players: users});
