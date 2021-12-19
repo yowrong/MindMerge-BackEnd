@@ -207,30 +207,3 @@ app.get("/", (req, res) => {
 //     {port: port,}
 // );
 
-socketio.on('connect', function (socket) {
-    numOfPlayers++;
-    let name = "player";
-    socket.userName = name;
-    socketio.emit('user_joined', {
-        user: socketio.userName,
-        numOfUsers: numOfPlayers
-    });
-    console.log('Number of players:', numOfPlayers);
-
-    socket.on('disconnect', function (data) {
-        numOfPlayers--;
-        socketio.emit('Player_Left', {
-            user: socket.userName,
-            numOfUsers: numOfPlayers
-        });
-        console.log('Connected Players:', numOfPlayers);
-    });
-
-
-    socket.on('send_message', (data) => {
-        socket.broadcast.emit('receive_message', data);
-    }),
-        socket.on("receive_message", "Successfully connected to server!");
-})
-
-
