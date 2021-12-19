@@ -36,7 +36,7 @@ class Game {
 
     generateCards() {
         for (let i = 1; i < 101; i++) {
-            cards.add(i);
+            cards.push(i);
         }
         return cards;
     }
