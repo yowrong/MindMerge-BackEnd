@@ -62,7 +62,7 @@ class Game {
         for (var i = 0; i < users.length; i++) {
             for (let j = 0; j < level; j++) {
                 random = Math.floor(Math.random() * 100) + 1;
-                while (!cards?.includes(random)) {
+                while (!cards.contains(random)) {
                     random = Math.floor(Math.random() * 100) + 1;
                 }
 
@@ -207,7 +207,7 @@ var game = new Game();
 
 /* Cards */
 var random;
-var cards = new Set();
+var cards = [];
 var players;
 
 
