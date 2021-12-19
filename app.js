@@ -5,35 +5,6 @@ const socketio = require("socket.io")(http);
 const msg = "Welcome to Mind Merge!";
 // import game from './game.js';
 
-let users = [];
-
-const userJoin = (id, username) => {
-    const user = { id, username, cards: [] };
-    users.push(user);
-    return user;
-}
-
-const userReset = () => {
-    users = [];
-}
-
-/* Game */
-const MAX_LIVES = 5;
-const MAX_THROWING_STARS = 3;
-var numOfPlayers = users.length;
-var level = 1;
-var MAX_LEVEL = 8;
-var lives = 0;
-var throwingStar = 0;
-var playedCards = [];
-var dealtCards = [];
-var game = new Game();
-
-/* Cards */
-var random;
-var cards = new Set();
-var players;
-
 /* Player */
 class Player {
 
@@ -209,6 +180,36 @@ class Game {
     }
 
 }
+
+let users = [];
+
+const userJoin = (id, username) => {
+    const user = { id, username, cards: [] };
+    users.push(user);
+    return user;
+}
+
+const userReset = () => {
+    users = [];
+}
+
+/* Game */
+const MAX_LIVES = 5;
+const MAX_THROWING_STARS = 3;
+var numOfPlayers = users.length;
+var level = 1;
+var MAX_LEVEL = 8;
+var lives = 0;
+var throwingStar = 0;
+var playedCards = [];
+var dealtCards = [];
+var game = new Game();
+
+/* Cards */
+var random;
+var cards = new Set();
+var players;
+
 
 app.get("/", (req, res) => {
     res.send(msg);
