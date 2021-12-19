@@ -12,21 +12,20 @@ const msg = "Welcome to Mind Merge!";
 var numOfPlayers = 0;
 var level = 1;
 var MAX_LEVEL = 8;
-var lives;
-var throwingStar;
+var lives = 0;
+var throwingStar = 0;
 var playedCards = [];
 var dealtCards = [];
 
 /* Cards */
-const random;
-var cardValue;
+var random;
 var cards = new Set();
 var players = [numOfPlayers];
 
 /* Player */
 
 class Player {
-    
+
     constructor(name) {
         this.playerCards = [];
         this.throwingStarCards = new Set();
@@ -39,13 +38,7 @@ class Player {
     }
 
     playCard() {
-        cardValue = this.playerCards.pop();
-        if (cardValue != dealtCards[0]) {
-            loseLives();
-        } else {
-            playedCards.push(cardValue);
-            dealtCards.shift();
-        }
+        return this.playerCards.shift();
     }
 }
 
@@ -96,7 +89,6 @@ class Game {
             }
         }
         dealtCards.sort;
-        dealtCards.reverse();
     }
 
     // during round
@@ -109,12 +101,34 @@ class Game {
         }
     }
 
+    evaluateOrder(cardValue) {
+        if (cardValue != dealtCards[0]) {
+            loseLives();
+            addAllCardsBelowCurrentCard(cardValue);
+        } else {
+            playedCards.push(cardValue);
+            dealtCards.shift();
+        }
+    }
+
+    addAllCardsBelowCurrentCard(cardValue) {
+        while (dealtCards[0] < cardValue) {
+            for (var i = 0; i < numOfPlayers; i++) {
+                if (players[i].playerCards[0] == dealtCards[0]) {
+                    players[i].playerCards.splice(0, 1);
+                }
+            }
+            playedCards.push(dealtCards.shift);
+        }
+        playedCards.push(cardValue);
+    }
+
     // end of round
     endOfRound() {
         while (!dealtCards.isEmpty()) {
             return false;
         }
-        return true; 
+        return true;
     }
 
     clearAllHands() {
@@ -150,7 +164,7 @@ app.get("/", (req, res) => {
 //     {port: port,}
 // );
 
-socketio.on("connect", function(userSocket) {
+socketio.on('connect', function (userSocket) {
     numOfPlayers++;
     let name = "player" + numOfPlayers;
     userSocket.user = name;
@@ -158,7 +172,7 @@ socketio.on("connect", function(userSocket) {
     console.log('Number of players:', numOfPlayers);
 
 
-    userSocket.on('disconnect', function(data) {
+    userSocket.on('disconnect', function (data) {
         numOfPlayers--;
         socketio.emit('Player_Left', { user: userSocket.userName, numOfUsers: numOfPlayers });
         console.log('Connected Players:', numOfPlayers);
