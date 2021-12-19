@@ -17,20 +17,20 @@ var lives;
 var throwingStar;
 var roundNumber = 1;
 
-class Game {
-
-}
 
 /* Cards */
 const random = Math.floor(Math.random() * 100) + 1;
 var cardValue;
-var cards = [];
+var cards = new Set();
 var players = [numOfPlayers];
 
+
 /* Player */
+
 class Player {
     constructor(name) {
         this.playerCards = [];
+        this.throwingStarCards = [];
         this.name = name;
     }
 
@@ -44,74 +44,66 @@ class Player {
     }
 }
 
-function generateCards() {
-    for (let i = 0; i < 101; i++) {
-        cards.push(i);
-    }
-    return cards;   
-}
+class Game {
 
-function dealCards(level, players) {
-    for (var i = 0; i < players.length; i++) {
-        for (let i = 0; i <= level; i++) {
-            let randomCard = random;
-            this.playerCards.push(randomCard);
-            cards.splice(randomCard, 1);
+    createPlayers(players) {
+        for (var i = 0; i < numOfPlayers; i++) {
+            players[i] = new Player();
         }
     }
-}
 
-void function initializeGame() {
-    switch (numOfPlayers) {
-        case 2:
-            lives = 2;
-            throwingStar = 1;
-            break;
-        case 3:
-            lives = 3;
-            throwingStar = 1;
-            break;
-        default:
-            lives = 4;
-            throwingStar = 1;
+    // beginning of round
+    dealCards(level, players) {
+        for (var i = 0; i < players.length; i++) {
+            for (let j = 0; j <= level; j++) {
+                let randomCard = random;
+
+                while (cards.has(randomCard)) {
+                    randomCard = Math.floor(Math.random() * 100) + 1;
+                }
+
+                players[i].playerCards.push(randomCard);
+                cards.delete(randomCard);
+            }
+        }
     }
-}
 
-const player1 = new Set();
-const player1Star = new Set();
-
-const player2 = new Set();
-const player2Star = new Set();
-
-const player3 = new Set();
-const player3Star = new Set();
-
-const player4 = new Set();
-const player4Star = new Set();
-
-// beginning of round
-void function initializeHand() {
-    for (let i = 0; i < roundNumber; i++) {
-        player1.add(Math.random() * 100);
-        player2.add(Math.random() * 100);
-        player3.add(Math.random() * 100);
-        player4.add(Math.random() * 100);
+    initializeGame() {
+        switch (numOfPlayers) {
+            case 2:
+                lives = 2;
+                throwingStar = 1;
+                break;
+            case 3:
+                lives = 3;
+                throwingStar = 1;
+                break;
+            default:
+                lives = 4;
+                throwingStar = 1;
+        }
     }
-}
 
-// end of round
-void function clearHand() {
-    player1.clear;
-    player2.clear;
-    player3.clear;
-    player4.clear;
-}
+    generateCards() {
+        for (let i = 0; i < 101; i++) {
+            cards.add(i);
+        }
+        return cards;
+    }
 
-void function clearThrowingStars() {
-    player1Star.clear;
-    player2Star.clear;
-    player3Star.clear;
-    player4Star.clear;
+    // end of round
+    clearAllHands(players) {
+        for (var i = 0; i < players.length; i++) {
+            players[i].playerCards.clear();
+        }
+
+    }
+
+    clearAllThrowingStars(players) {
+        for (var i = 0; i < players.length; i++) {
+            players[i].throwingStarCards.clear();
+        }
+    }
 }
 
 app.get("/", (req, res) => {
