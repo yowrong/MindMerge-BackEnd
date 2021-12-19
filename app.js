@@ -28,7 +28,7 @@ socketio.on("connection", (userSocket) => {
         userSocket.emit("initRoom", {roomCode: "ABCD", players: users});
     });
     userSocket.on("joinRoom", (data) => {
-        if (data == "ABCD") {
+        if (data.roomCode === "ABCD") {
             const user = userJoin(userSocket.id, data);
         }
         userSocket.emit("confirmRoom", {roomCode: "ABCD", players: users});
