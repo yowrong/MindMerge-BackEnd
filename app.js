@@ -26,10 +26,12 @@ socketio.on("connection", (userSocket) => {
     userSocket.on("createRoom", (data) => {
         userJoin(userSocket.id, data);
         userSocket.emit("initRoom", {roomCode: "ABCD", players: users});
+        userSocket.emit("newPlayer", {roomCode: "ABCD", players: users});
     });
     userSocket.on("joinRoom", (data) => {
         userJoin(userSocket.id, data);
         userSocket.emit("confirmRoom", {roomCode: "ABCD", players: users});
+        userSocket.emit("newPlayer", {roomCode: "ABCD", players: users});
     })
 })
 
