@@ -16,6 +16,8 @@ var MAX_LEVEL = 8;
 var lives;
 var throwingStar;
 var roundNumber = 1;
+var playedCards = [];
+var dealtCards = [];
 
 
 /* Cards */
@@ -40,7 +42,13 @@ class Player {
     }
 
     playCard() {
-        this.playerCards.pop();
+        cardValue = this.playerCards.pop();
+        if (cardValue != dealtCards[0]) {
+            loseLives();
+        } else {
+            playedCards.push(cardValue);
+            dealtCards.shift();
+        }
     }
 }
 
@@ -63,9 +71,12 @@ class Game {
                 }
 
                 players[i].playerCards.push(randomCard);
+                dealtCards.push(randomCard);
                 cards.delete(randomCard);
             }
         }
+        dealtCards.sort;
+        dealtCards.reverse();
     }
 
     initializeGame() {
@@ -85,7 +96,7 @@ class Game {
     }
 
     generateCards() {
-        for (let i = 0; i < 101; i++) {
+        for (let i = 1; i < 101; i++) {
             cards.add(i);
         }
         return cards;
@@ -104,6 +115,20 @@ class Game {
             players[i].throwingStarCards.clear();
         }
     }
+
+    loseLives() {
+        if (lives > 0) {
+            lives--;
+        }
+        if (lives == 0) {
+            endGame();
+        }
+    }
+
+    endGame() {
+        // return to lobby
+    }
+
 }
 
 app.get("/", (req, res) => {
