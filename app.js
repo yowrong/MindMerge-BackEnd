@@ -8,7 +8,7 @@ const msg = "Welcome to Mind Merge!";
 let users = [];
 
 const userJoin = (id, username) => {
-    const user = { id, username };
+    const user = { id, username, cards: [] };
     users.push(user);
     return user;
 }
@@ -27,6 +27,7 @@ var lives = 0;
 var throwingStar = 0;
 var playedCards = [];
 var dealtCards = [];
+var game = new Game();
 
 /* Cards */
 var random;
@@ -59,7 +60,7 @@ class Game {
         numOfPlayers = users.length;
         for (var i = 0; i < numOfPlayers; i++) {
             players[i] = new Player();
-        }
+        } 
     }
 
     generateCards() {
@@ -87,14 +88,14 @@ class Game {
 
     // beginning of round
     dealCards() {
-        for (var i = 0; i < players.length; i++) {
+        for (var i = 0; i < users.length; i++) {
             for (let j = 0; j < level; j++) {
                 random = Math.floor(Math.random() * 100) + 1;
                 while (!cards.includes(random)) {
                     random = Math.floor(Math.random() * 100) + 1;
                 }
 
-                players[i].playerCards.push(random);
+                users[i].cards.push(random);
                 dealtCards.push(random);
                 cards.splice(random, 1);
             }
@@ -239,16 +240,19 @@ socketio.on("connection", (userSocket) => {
     });
 
     userSocket.on("createOtherPlayers", () => {
-        const otherUsers = users.filter((user) => userSocket.id !== user.id);
-        userSocket.emit("createOtherPlayers", {players: otherUsers});
-        let game = new Game();
-        game.createPlayers();
+        // game.createPlayers();
         game.generateCards();
         game.initializeGame();
         game.dealCards();
+        const otherUsers = users.filter((user) => userSocket.id !== user.id);
+        const self = users.filter((user) => userSocket.id === user.id);
+        userSocket.emit("createOtherPlayers", {players: otherUsers, self: self, lives: game.lives, throwingStar: game.throwingStar, level: game.level, playedCards: null});
     });
     userSocket.on("playCard", (data) => {
         game.evaluateOrder(data);
+        const otherUsers = users.filter((user) => userSocket.id !== user.id);
+        const self = users.filter((user) => userSocket.id === user.id);
+        userSocket.emit("playCard", {players: otherUsers, self: self, lives: game.lives, throwingStar: game.throwingStar, level: game.level, playedCards: game.playedCards});
     })
     
     // var socket = socketio.connect('http://localhost');
