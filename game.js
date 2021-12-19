@@ -99,6 +99,19 @@ class Game {
         return cards;
     }
 
+    endOfRound() {
+        while (!dealtCards.isEmpty()) {
+            return false;
+        }
+        return true; 
+    }
+
+    nextLevel() {
+        if (endOfRound && level < MAX_LEVEL) {
+            level++;
+        }
+    }
+
     // end of round
     clearAllHands(players) {
         for (var i = 0; i < players.length; i++) {
