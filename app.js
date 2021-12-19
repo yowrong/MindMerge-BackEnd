@@ -7,16 +7,6 @@ const msg = "Welcome to Mind Merge!";
 
 let users = [];
 
-const userJoin = (id, username) => {
-    const user = { id, username };
-    users.push(user);
-    return user;
-}
-
-const userReset = () => {
-    users = [];
-}
-
 /* Game */
 const MAX_LIVES = 5;
 const MAX_THROWING_STARS = 3;
@@ -27,11 +17,23 @@ var lives = 0;
 var throwingStar = 0;
 var playedCards = [];
 var dealtCards = [];
+var game = new Game();
 
 /* Cards */
 var random;
 var cards = new Set();
 var players;
+
+
+const userJoin = (id, username) => {
+    const user = { id, username };
+    users.push(user);
+    return user;
+}
+
+const userReset = () => {
+    users = [];
+}
 
 /* Player */
 class Player {
@@ -241,7 +243,6 @@ socketio.on("connection", (userSocket) => {
     userSocket.on("createOtherPlayers", () => {
         const otherUsers = users.filter((user) => userSocket.id !== user.id);
         userSocket.emit("createOtherPlayers", {players: otherUsers});
-        let game = new Game();
         game.createPlayers();
         game.generateCards();
         game.initializeGame();
