@@ -24,12 +24,12 @@ setInterval(userReset, 300000);
 
 socketio.on("connection", (userSocket) => {
     userSocket.on("createRoom", (data) => {
-        const user = userJoin(userSocket.id, data);
+        const user = userJoin(users.length, data);
         userSocket.emit("initRoom", {roomCode: "ABCD", players: users});
     });
     userSocket.on("joinRoom", (data) => {
         if (data == "ABCD") {
-            const user = userJoin(userSocket.id, data);
+            const user = userJoin(users.length, data);
         }
         userSocket.emit("confirmRoom", {roomCode: "ABCD", players: users});
     })
