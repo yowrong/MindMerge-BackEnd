@@ -34,7 +34,7 @@ socketio.on("connection", (userSocket) => {
         userSocket.emit("newPlayer", {roomCode: "ABCD", players: users});
     });
     userSocket.on("createOtherPlayers", () => {
-        const otherUsers = users.filter((user) => userSocket.id === user.id);
+        const otherUsers = users.filter((user) => userSocket.id !== user.id);
         userSocket.emit("createOtherPlayers", {players: otherUsers});
     })
 })
