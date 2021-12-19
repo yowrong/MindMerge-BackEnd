@@ -1,5 +1,4 @@
 const { listeners } = require("process");
-
 const port = process.env.PORT || 3000;
 const app = require("express")();
 const http = require("http").createServer(app);
@@ -10,7 +9,7 @@ const msg = "Welcome to Mind Merge!";
 // let enterNameButton = // name button
 
 /* Game */
-var numOfPlayers = 4;
+var numOfPlayers = 0;
 var level = 1;
 var MAX_LEVEL = 8;
 var lives;
@@ -25,7 +24,6 @@ const random = Math.floor(Math.random() * 100) + 1;
 var cardValue;
 var cards = new Set();
 var players = [numOfPlayers];
-
 
 /* Player */
 
@@ -66,7 +64,7 @@ class Game {
             for (let j = 0; j < level; j++) {
                 let randomCard = random;
 
-                while (cards.has(randomCard)) {
+                while (!cards.has(randomCard)) {
                     randomCard = Math.floor(Math.random() * 100) + 1;
                 }
 
@@ -149,16 +147,32 @@ app.get("/", (req, res) => {
 })
 
 // const server = new WebSocket.Server(
-//     {
-//       port: port,
-//     }
+//     {port: port,}
 // );
 
-socketio.on("connection", (userSocket) => {
+socketio.on("connect", function(userSocket) {
+    numOfPlayers++;
+    let name = "player" + numOfPlayers;
+    userSocket.user = name;
+    socketio.emit('New_Player_Added', { user: socketio.userName, numOfUsers: numOfPlayers });
+    console.log('Number of players:', numOfPlayers);
+
+
+    userSocket.on('disconnect', function(data) {
+        numOfPlayers--;
+        socketio.emit('Player_Left', { user: userSocket.userName, numOfUsers: numOfPlayers });
+        console.log('Connected Players:', numOfPlayers);
+    });
+
+
     userSocket.on("send_message", (data) => {
         userSocket.broadcast.emit("receive_message", data);
     }),
         userSocket.on("receive_message", "Successfully connected to server!");
 })
 
-http.listen(port);
+http.listen(port, function () {
+    console.log('Listening on port ' + port + '!');
+});
+
+
