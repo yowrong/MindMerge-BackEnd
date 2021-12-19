@@ -32,6 +32,10 @@ socketio.on("connection", (userSocket) => {
         userJoin(userSocket.id, data);
         userSocket.emit("confirmRoom", {roomCode: "ABCD", players: users});
         userSocket.emit("newPlayer", {roomCode: "ABCD", players: users});
+    });
+    userSocket.on("createOtherPlayers", () => {
+        const otherUsers = users.filter((user) => userSocket.id === user.id);
+        userSocket.emit("createOtherPlayers", {players: otherUsers});
     })
 })
 
